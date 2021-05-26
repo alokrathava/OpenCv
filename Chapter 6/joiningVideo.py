@@ -43,7 +43,9 @@ while True:
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     imgCanny = cv2.Canny(img, 100, 100)
     imgDialation = cv2.dilate(imgCanny, kernel, iterations=1)
-    imgStack = stackImages(0.5, ([img, imgGray, imgCanny, imgDialation], [img, imgGray, imgCanny, imgDialation]))
+    imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    imgStack = stackImages(0.5, (
+        [img, imgGray, imgCanny, imgDialation, imgHSV], [img, imgGray, imgCanny, imgDialation, imgHSV]))
     cv2.imshow("Image Stack", imgStack)
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
