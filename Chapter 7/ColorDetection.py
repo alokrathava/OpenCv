@@ -27,8 +27,14 @@ while True:
     val_max = cv2.getTrackbarPos("Value Max", "Trackbars")
 
     print(h_min, h_max, s_min, s_max, val_min, val_max)
+    lower = np.array([h_min, s_min, val_min])
+    higher = np.array([h_max, s_max, val_max])
+    mask = cv2.inRange(imgHSV, lower, higher)
+    imgResult = cv2.bitwise_and(img, img, mask=mask)
 
     cv2.imshow("Original", img)
-    cv2.imshow("Image HSV", imgHSV)
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+    cv2.imshow("HSV", imgHSV)
+    cv2.imshow("Mask", mask)
+    cv2.imshow("Result", imgResult)
+
+    cv2.waitKey(1)

@@ -51,5 +51,5 @@ cv.imshow('Original Image', image)
 cv.imshow('New Image', new_image)
 
 # Wait until user press some key
-cv.waitKey()
+cv.waitKey(0)
 ## [basic-linear-transform-display]
