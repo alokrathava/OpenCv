@@ -40,7 +40,32 @@ def getContours(img):
     for cnt in contours:
         area = cv2.contourArea(cnt)
         print(area)
-        cv2.drawContours(imgContour, cnt, -1, (128, 128, 128), 3)
+        if area > 500:
+            cv2.drawContours(imgContour, cnt, -1, (0, 0, 0), 3)
+            perimeter = cv2.arcLength(cnt, True)
+            print(perimeter)
+            approx = cv2.approxPolyDP(cnt, 0.02 * perimeter, True)
+            # approxPolyDP() allows the approximation of polygons
+            print(len(approx))
+            objCor = len(approx)
+            x, y, w, h = cv2.boundingRect(approx)
+
+            if objCor == 3:
+                objectType = "Triangle"
+            elif objCor == 4:
+                aspRatio = w / float(h)
+                if aspRatio > 0.95 and aspRatio < 1.05:
+                    objectType = "Square"
+                else:
+                    objectType = "Rectangle"
+            elif objCor > 4:
+                objectType = "Circle"
+            else:
+                objectType = "None"
+
+        cv2.rectangle(imgContour, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(imgContour, objectType, (x + (w // 2) - 10, y + (h // 2) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    (0, 0, 0), 2)
 
 
 path = 'assets/shapes.png'
@@ -51,7 +76,7 @@ imgBlu = cv2.GaussianBlur(imgGray, (7, 7), 1)
 imgCanny = cv2.Canny(imgBlu, 100, 100)
 imageBlank = np.zeros_like(img)
 getContours(imgCanny)
-ImageStack = stackImages(0.6, ([img, imgGray, imgBlu],
+ImageStack = stackImages(0.5, ([img, imgGray, imgBlu],
                                [imgCanny, imgContour, imageBlank]))
 # cv2.imshow("Images", img)
 # cv2.imshow("Image Gray", imgGray)
